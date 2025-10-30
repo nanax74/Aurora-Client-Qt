@@ -18,6 +18,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../Dist")
 
 add_executable(QtApp
     Source/Main.cpp
+    Source/Handler.cpp
+
+    Include/Handler.hpp
+
     UI/Qml.qrc
 )
 
@@ -26,7 +30,11 @@ target_link_libraries(QtApp PRIVATE
     Qt6::Qml
 )
 
-target_include_directories(QtApp PRIVATE ${LIBRARY_DIR}/include)
+target_include_directories(QtApp PRIVATE
+    ${LIBRARY_DIR}/include
+    ${CMAKE_SOURCE_DIR}/Include 
+)
+
 target_link_libraries(QtApp PRIVATE ${LIBRARY_DIR}/lib/libProgress.a)
 
 add_custom_command(TARGET QtApp POST_BUILD
