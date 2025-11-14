@@ -13,7 +13,6 @@
 -ID:/Qt/6.10.0/mingw_64/include/QtQml
 -ID:/Qt/6.10.0/mingw_64/include/QtQuick
 -ID:/Qt/6.10.0/mingw_64/include/QtNetwork
--ID:/Nyan/C++/Install/include"
 
 -DUNICODE
 -D_UNICODE

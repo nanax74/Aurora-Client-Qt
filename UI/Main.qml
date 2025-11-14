@@ -1,17 +1,52 @@
-import QtQuick 6.10
-import QtQuick.Controls 6.10
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts 6.0
+import Aurora 1.0
 
-ApplicationWindow
-{
+Window {
+    id: root
     visible: true
-    width: 400
-    height: 300
-    title: "QML + C++ Example"
+    width: 800
+    height: 600
+    title: "Console"
 
-    Button
+    ConsoleController
     {
-        text: "Test"
-        anchors.centerIn: parent
-        onClicked: handler.handleButtonClick();
+        id: controller
+    }
+
+    ColumnLayout
+    {
+        anchors.fill: parent
+        spacing: 0
+
+        ListView {
+            id: listView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: controller.model
+            delegate: Text {
+                text: model.text
+                width: listView.width
+                wrapMode: Text.Wrap
+            }
+            onCountChanged: listView.positionViewAtEnd()
+        }
+
+        TextField
+        {
+            id: inputField
+            Layout.fillWidth: true
+            placeholderText: "Enter command..."
+            onAccepted: {
+                controller.sendCommand(text)
+                text = ""
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        controller.startProcess("C:/source/repos2/Aurora/Client/Dist/Aurora-Client.exe")
+        inputField.forceActiveFocus()
     }
 }

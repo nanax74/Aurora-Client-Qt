@@ -7,4 +7,4 @@ clean:
 	@rm -rf Build Dist
 
 run:
-	@Dist/QtApp.exe
+	@Dist/Aurora-Qt.exe
