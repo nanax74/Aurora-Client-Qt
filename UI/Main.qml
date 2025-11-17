@@ -1,52 +1,81 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts 6.0
-import Aurora 1.0
+import QtQuick.Layouts
 
-Window {
-    id: root
+ApplicationWindow {
     visible: true
-    width: 800
-    height: 600
-    title: "Console"
-
-    ConsoleController
-    {
-        id: controller
-    }
+    width: 400
+    height: 500
+    title: qsTr("Qt Client UI")
 
     ColumnLayout
     {
         anchors.fill: parent
-        spacing: 0
+        anchors.margins: 20
+        spacing: 10
 
-        ListView {
-            id: listView
+        RowLayout
+        {
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            model: controller.model
-            delegate: Text {
-                text: model.text
-                width: listView.width
-                wrapMode: Text.Wrap
+            Layout.preferredHeight: parent.height * 0.5
+            spacing: 10
+
+            Rectangle
+            {
+                radius: 10
+                color: "lightgray"
+                Layout.fillWidth: true
+                Layout.preferredHeight: parent.height * 0.5
+
+                TextField
+                {
+                    id: ipField
+                    anchors.fill: parent
+                    placeholderText: "IP Address"
+                    font.pixelSize: parent.height
+                }
             }
-            onCountChanged: listView.positionViewAtEnd()
+
+            Rectangle
+            {
+                radius: 10
+                color: "lightgray"
+                Layout.fillWidth: true
+                Layout.preferredHeight: parent.height * 0.5
+
+                TextField
+                {
+                    id: portField
+                    anchors.fill: parent
+                    placeholderText: "Port"
+                    font.pixelSize: parent.height
+                }
+            }
         }
 
-        TextField
+        Button
         {
-            id: inputField
+            text: "Connect"
             Layout.fillWidth: true
-            placeholderText: "Enter command..."
-            onAccepted: {
-                controller.sendCommand(text)
-                text = ""
+            Layout.preferredHeight: parent.height * 0.5
+            onClicked: {
+                client.connectToHost(ipField.text, parseInt(portField.text))
             }
         }
     }
 
-    Component.onCompleted: {
-        controller.startProcess("C:/source/repos2/Aurora/Client/Dist/Aurora-Client.exe")
-        inputField.forceActiveFocus()
+    Connections
+    {
+        target: client
+
+        function onReceived(data)
+        {
+            logArea.append("Received: " + data)
+        }
+
+        function onDisconnected()
+        {
+            logArea.append("Disconnected from server")
+        }
     }
 }

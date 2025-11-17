@@ -1,24 +1,21 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
-
-#include "ConsoleController.hpp"
-#include "ConsoleModel.hpp"
+#include "Net/Transport/Client.hpp"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<ConsoleController>("Aurora", 1, 0, "ConsoleController");
-    qmlRegisterType<ConsoleModel>("Aurora", 1, 0, "ConsoleModel");
+    auto client = new Net::Transport::Client();
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/Main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app, [url](QObject *obj, const QUrl &objUrl)
-    {
-        if (!obj && url == objUrl) QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+
+    engine.rootContext()->setContextProperty("client", client);
+
+    engine.load(QUrl(QStringLiteral("qrc:/Main.qml")));
+    if (engine.rootObjects().isEmpty()) return -1;
 
     return app.exec();
 }
